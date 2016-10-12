@@ -141,7 +141,7 @@ $RECYCLE.BIN/
 
 # NHK News Easy-specific
 # ========================
-*out.json
+*.json
 *out.dic
 *.wsgi
 *.sqlite
