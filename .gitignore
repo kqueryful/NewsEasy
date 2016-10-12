@@ -137,3 +137,12 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+
+# NHK News Easy-specific
+# ========================
+*out.json
+*out.dic
+*.wsgi
+*.sqlite
+*.docx

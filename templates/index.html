@@ -1,0 +1,28 @@
+<html>
+  <head>
+	<a href="/index"><h1>NHK NewsWeb Easy Mining</h1></a>
+	<style type=text/css>{{ get_resource_as_string('templates/jp.css') }}</style>
+    <title>NHK NewsWeb Easy Mining</title>
+  </head>
+  <body>
+	<form action="{{ url_for('index') }}" method=post>
+		<input type=text size=80px name=word placeholder="Search words"> <input type=submit value=Search>
+    </form>
+  
+	<table>
+		<tr>
+			<th>Word</th>
+			<th>Reading</th>
+			<th>Frequency</th>
+		</tr>
+		{%- for word in words %}
+			<tr>
+				<td><a href="/word/{{word.word}}/">{{word.word}}</a></td>
+				<td>{{word.reading}}</td>
+				<td>{{word.frequency}}</td>
+			</tr>
+		{%- endfor %}
+	</table>
+  </body>
+  <footer>2015 kqueryful@gmail</footer>
+</html>

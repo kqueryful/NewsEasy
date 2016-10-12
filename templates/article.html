@@ -1,0 +1,25 @@
+<html>
+	<head>
+		<a href="/index">NHK NewsWeb Easy Mining</a>
+		<style type=text/css>{{ get_resource_as_string('templates/jp.css') }}</style>
+	</head>
+	<body>
+		<h1>{{name}}</h1>
+		
+		{%- for text in texts %}
+			<p>{{text.text}}</p>
+		{%- endfor %}
+		
+		<table>
+			<tr>
+				<th>Article Word List</th>
+			</tr>
+			{%- for word in words %}
+					<tr>
+						<td><a href="/word/{{word.word}}/">{{word.word}}</a></td>
+					</tr>
+			{%- endfor %}
+		</table>
+	</body>
+	<footer>2015 kqueryful@gmail</footer>
+</html>

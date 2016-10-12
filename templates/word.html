@@ -1,0 +1,42 @@
+<html>
+	<head>
+		<a href="/index">NHK NewsWeb Easy Mining</a>
+		<style type=text/css>{{ get_resource_as_string('templates/jp.css') }}</style>
+		{%- for word in wordInfo %}
+			<title>{{word.word}}</title>
+			<h1>{{word.word}} - {{word.reading}}
+				{% if word.alt %}【{{word.alt}}】{% endif %}
+			</h1>
+			{% if word.category %}
+				{% if word.category == 'L' %}
+					<h4><a href="https://ja.wikipedia.org/wiki/{{word.word}}">Proper noun: Country, prefecture, town, or place</a></h4>
+				{% elif word.category == 'N' %}
+					<h4><a href="https://ja.wikipedia.org/wiki/{{word.word}}">Proper noun: Personal name</a></h4>
+				{% elif word.category == 'C' %}
+					<h4><a href="https://ja.wikipedia.org/wiki/{{word.word}}">Proper noun: Company or group</a></h4>
+				{% endif %}
+			{% endif %}
+			
+			{% if word.definition %}
+				<h3>{{word.definition|safe}}</h3>
+			{% endif %}
+		{%- endfor %}
+	</head>
+	<body>
+		<table>
+			<tr>
+				<th>Article</th>
+				<th>Gloss</th>
+				<th>Sentence</th>
+			</tr>
+			{%- for sentence in sentences %}
+				<tr>
+					<td><a href="/article/{{sentence.newsid}}/">{{sentence.newsid}}</a></td>
+					<td><a href="http://nihongo.monash.edu/cgi-bin/wwwjdic?9ZIH{{sentence.sentence|striptags|safe}}">Gloss</a></td>
+					<td>{{sentence.sentence|safe}}</td>
+				</tr>
+			{%- endfor %}
+		</table>
+	</body>
+	<footer>2015 kqueryful@gmail</footer>
+</html>
