@@ -64,7 +64,7 @@ if __name__ == '__main__':
 
 	# for each article
 	for files in glob.glob("news/*.out.json"):
-		article = json.load(open(files, encoding="latin-1"))
+		article = json.load(open(files, encoding="utf-8"))
 
 		# parse text into sentences
 		articleText = article["text"]
@@ -78,8 +78,10 @@ if __name__ == '__main__':
 				# get readings
 				reading = ""
 				for index, val in enumerate(item["ruby"]):
-					try: reading += item["ruby"][index]["r"]
-					except KeyError: reading += item["ruby"][index]["s"]
+					try:
+						reading += item["ruby"][index]["r"]
+					except KeyError:
+						reading += item["ruby"][index]["s"]
 
 				# insert into sql
 				try:
@@ -99,13 +101,15 @@ if __name__ == '__main__':
 				# get readings
 				reading = ""
 				for index, val in enumerate(item["ruby"]):
-					try: reading += item["ruby"][index]["r"]
-					except KeyError: reading += item["ruby"][index]["s"]
+					try:
+						reading += item["ruby"][index]["r"]
+					except KeyError:
+						reading += item["ruby"][index]["s"]
 
 				# find definitions
 				dicid = re.sub("BE-", "", item["dicid"])
 				dicPath = re.sub("json", "dic", files)
-				dicFile = json.load(open(dicPath, encoding="latin-1"))
+				dicFile = json.load(open(dicPath, encoding="utf-8"))
 
 				defs = ""
 				for entry in dicFile["reikai"]["entries"][dicid]:
