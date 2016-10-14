@@ -1,6 +1,6 @@
-#!/usr/bin/env python3
-from flask import Flask, g, render_template, request
+from flask import Flask, g, render_template, request, url_for
 import sqlite3
+
 
 app = Flask(__name__)
 
@@ -21,7 +21,7 @@ def index():
 		words = [dict(word=row[0], reading=row[1], frequency=row[2]) for row in cur.fetchall()]
 	g.db.close()
 	return render_template('index.html', words=words)
-	
+
 # article page
 @app.route('/article/<name>/')
 def word(name=None):
