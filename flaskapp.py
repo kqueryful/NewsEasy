@@ -1,7 +1,6 @@
 from flask import Flask, g, render_template, request, url_for
 import sqlite3
 
-
 app = Flask(__name__)
 
 def get_resource_as_string(name, charset='utf-8'):
@@ -34,7 +33,7 @@ def word(name=None):
 	return render_template('article.html', texts=texts, name=name, words=words)
 
 # word page
-@app.route('/word/<name>/', methods=["GET","POST"])
+@app.route('/word/<name>/')
 def article(name=None):
 	g.db = sqlite3.connect('newsWeb.sqlite')
 	cur = g.db.execute ('SELECT word, reading, definition, frequency, category, alt FROM Words WHERE Words.word = ?', [name])

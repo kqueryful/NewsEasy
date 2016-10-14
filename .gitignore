@@ -146,3 +146,4 @@ $RECYCLE.BIN/
 *.wsgi
 *.sqlite
 *.docx
+idList.txt
