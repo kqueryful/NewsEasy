@@ -1,63 +1,43 @@
 import re
-import csv
 import json
 import glob
 from urllib import request
-import os.path
-import sqlite3
-
 from grabber import Grabber
+from sqliteInstance import SqliteInstance
+from formatter import Formatter
 
 
-def downloadFiles():
+def download_files():
     grabber = Grabber()
 
     for id in grabber.get_grabber('fromSite'):
         grabber.download_article(id)
 
-
-def tableSetup():
-    try:
-        # clear old tables
-        c.execute("DROP TABLE Articles")
-        c.execute("DROP TABLE Words")
-        c.execute("DROP TABLE Examples")
-    except sqlite3.OperationalError:
-        pass
-    try:
-        # create new tables
-        c.execute("CREATE TABLE Articles (newsid TEXT PRIMARY KEY, text TEXT)")
-        c.execute("CREATE TABLE Words (word TEXT PRIMARY KEY, reading TEXT, frequency INTEGER, category TEXT, definition TEXT, alt TEXT, wiki TEXT, jdic TEXT)")
-        c.execute(
-            "CREATE TABLE Examples (word TEXT, sentence TEXT PRIMARY KEY, newsid TEXT)")
-    except sqlite3.OperationalError:
-        pass
-
-    conn.commit()
-
 if __name__ == '__main__':
-    downloadFiles()
+    download_files()
 
-    # SQLite setup
-    conn = sqlite3.connect('newsWeb.sqlite')
-    c = conn.cursor()
-    tableSetup()
+    # setup
+    db = SqliteInstance()
+    db.table_setup()
+    formatter = Formatter()
 
     # for each article
     for files in glob.glob("news/*.out.json"):
         article = json.load(open(files, encoding="utf-8"))
 
-        # parse text into sentences
-        articleText = article["text"]
-        c.execute("INSERT OR IGNORE INTO Articles (newsid, text) VALUES (?,?)",
-                  (article["newsid"], articleText))
+        # article prep
+        text = article["text"]
+        title = text.split(' ')[0]
+        articleText = text[len(title):]
+        fancyArticle = articleText
         articleLines = articleText.split(u"。")
 
         # for each word
         for item in article["morph"]:
+
             # proper nouns
             if item.get("class") in ['L', 'N', 'C'] and item["word"] != u"・":
-                # get readings
+                                # get readings
                 reading = ""
                 for index, val in enumerate(item["ruby"]):
                     try:
@@ -65,47 +45,44 @@ if __name__ == '__main__':
                     except KeyError:
                         reading += item["ruby"][index]["s"]
 
-                # insert into sql
-                try:
-                    c.execute("INSERT INTO Words (word, reading, frequency, category) VALUES (?,?,?,?)",
-                              (item["word"], reading, 1, item["class"]))
-                except sqlite3.IntegrityError:
-                    c.execute(
-                        "UPDATE Words SET frequency = frequency + 1 WHERE word = ?", (item["word"],))
+                # add word
+                db.add_word(item["word"], reading, category=item["class"])
 
                 # add examples
                 for line in articleLines:
                     if item["word"] in line:
-                        sentence = re.sub(
-                            item["word"], "<b>" + item["word"] + "</b>", line.strip() + u"。")
-                        c.execute("INSERT OR IGNORE INTO Examples VALUES (?,?,?)", (item[
-                                  "word"], sentence, article["newsid"]))
+                        sentence = formatter.bold_in_sentence(item["word"], line)
+                        db.add_example(
+                            item["word"], sentence, article["newsid"])
+
+                # article highlighting
+                fancyArticle = formatter.highlight(
+                    item["word"], fancyArticle, item["class"])
 
             # defined words
             if item.get("dicid") != None and not item.get("dicid").isspace():
-                # get readings
-                reading = ""
-                for index, val in enumerate(item["ruby"]):
-                    try:
-                        reading += item["ruby"][index]["r"]
-                    except KeyError:
-                        reading += item["ruby"][index]["s"]
+                # get reading
+                reading = item["kana"]
 
-                # find definitions
-                dicid = re.sub("BE-", "", item["dicid"])
-                dicPath = re.sub("json", "dic", files)
-                dicFile = json.load(open(dicPath, encoding="utf-8"))
+                # match dicid BE-0000 to 0000
+                dicid = item["dicid"][3:]
 
-                defs = ""
+                # match json file to dic file
+                dicPath = files[:-4] + 'dic'
+                try:
+                    dicFile = json.load(open(dicPath, encoding="utf-8"))
+                except:
+                    print(dicPath)
+
+                ankiDefs = []
+                rubyDefs = []
                 for entry in dicFile["reikai"]["entries"][dicid]:
-                    # convert ruby-formatted furigana
-                    strippedDef = re.sub("</*ruby>", "", entry["def"])
-                    strippedDef = re.sub("</rb>", "", strippedDef)
-                    strippedDef = re.sub("<rb>", " ", strippedDef)
-                    strippedDef = re.sub("<rt>", "[", strippedDef)
-                    strippedDef = re.sub("</rt>", "]", strippedDef)
-                    defs += strippedDef + "<br>"
-                defs = defs[:-4]
+                    rubyDefs.append(entry["def"])
+                    ankiDef = formatter.convert_to_ankiDef(entry["def"])
+                    ankiDefs.append(ankiDef)
+
+                ankiDefs = "<br>".join(ankiDefs)
+                rubyDefs = "<br>".join(rubyDefs)
 
                 # find alternate forms
                 altList = []
@@ -115,22 +92,23 @@ if __name__ == '__main__':
                         altList.append(version)
                 alt = ", ".join(altList)
 
-                # insert into sql
-                try:
-                    c.execute("INSERT INTO Words (word, reading, frequency, alt, definition) VALUES (?,?,?,?,?)",
-                              (item["base"], reading, 1, alt, defs))
-                except sqlite3.IntegrityError:
-                    c.execute(
-                        "UPDATE Words SET frequency = frequency + 1 WHERE word = ?", (item["base"],))
+                # add word
+                db.add_word(item["base"], reading, alt=alt,
+                            ankiDefs=ankiDefs, rubyDefs=rubyDefs)
 
                 # add examples
                 for line in articleLines:
                     if item["word"] in line:
-                        sentence = re.sub(
-                            item["word"], "<b>" + item["word"] + "</b>", line.strip() + u"。")
-                        c.execute("INSERT OR IGNORE INTO Examples VALUES (?,?,?)", (item[
-                                  "base"], sentence, article["newsid"]))
+                        sentence = formatter.bold_in_sentence(
+                            item["word"], line)
+                        db.add_example(
+                            item["base"], sentence, article["newsid"])
 
-    conn.commit()
-    c.close()
-    conn.close()
+                # article highlighting
+                fancyArticle = formatter.highlight(item["word"], fancyArticle)
+
+                # save article
+        db.add_article(article["newsid"], title, fancyArticle, fancyArticle)
+
+    db.commit()
+    db.clean_up()

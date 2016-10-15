@@ -147,3 +147,6 @@ $RECYCLE.BIN/
 *.sqlite
 *.docx
 idList.txt
+
+# imdone stuff
+.imdone

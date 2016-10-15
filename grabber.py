@@ -1,4 +1,5 @@
 import os.path
+import json
 from urllib import request
 
 
@@ -27,13 +28,14 @@ class Grabber:
         if option == 'fromSite':
             # download news-list
             request.urlretrieve("%s/news-list.json" %
-                                (url), "news/news-list.json")
+                                (self.url), "news/news-list.json")
 
             # parse news-list
             data = json.loads(open("news/news-list.json",
                                    encoding="latin-1").readline()[3:])
 
             for day in data[0]:
+                print(day)
                 for index, val in enumerate(data[0][day]):
                     id = data[0][day][index]["news_id"]
                     yield id
@@ -61,6 +63,11 @@ class Grabber:
             try:
                 request.urlretrieve("%s/%s/%s.out.dic" %
                                     (self.url, id, id), dname)
+                print("downloaded %s" % id)
+            except:
+                pass
+
+            try:
                 request.urlretrieve("%s/%s/%s.out.json" %
                                     (self.url, id, id), jname)
                 print("downloaded %s" % id)

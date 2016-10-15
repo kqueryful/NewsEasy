@@ -1,10 +1,10 @@
-head, body 
+head, body
 {
 	margin: 30px;
 	font-family:  Meiryo, gothic, sans-serif;
 	color: #111;
 }
-body 
+body
 {
     background-color: #fefefe;
 }
@@ -14,12 +14,35 @@ b
 	color: #000;
 }
 
-a:visited 
+span.L, span.N, span.C, span.R
+{
+	border-radius: 3px;
+	padding: 0 5px;
+	text-decoration: none;
+	margin: 0 5px;
+}
+span.L
+{
+	background-color: #adb9e6;
+}
+span.N
+{
+	background-color: #d7ade6;
+}
+span.C
+{
+	background-color: #add8e6;
+}
+span.R
+{
+	background-color: #eae192;
+}
+a:visited
 {
     color: #4CAF50;
-} 
+}
 
-h1 
+h1
 {
     text-decoration: none !important;
 }
@@ -29,7 +52,6 @@ p
 	font-size: 110%;
 	line-height:180%;
 	padding-top: 10px;
-	
 }
 
 table
@@ -38,7 +60,7 @@ table
 	border-collapse: collapse;
 }
 
-th 
+th
 {
     background-color: #4CAF50;
     color: white;
@@ -51,7 +73,7 @@ td
 	padding: 8px;
 }
 
-tr:nth-child(even) 
+tr:nth-child(even)
 {
 	background-color: #f2f2f2
 }
@@ -61,7 +83,7 @@ input[type=text]
 	border:1px solid #ddd;
 	height: 28px;
 	width: 84%;
-	
+
 }
 input[type=submit]
 {

@@ -3,11 +3,9 @@
 {% block content %}
 	<a href="{{ url_for('index') }}">NHK NewsWeb Easy Mining</a>
 
-	<h1>{{name}}</h1>
+	<h1>{{texts[0].title}}</h1>
 
-	{%- for text in texts %}
-		<p>{{text.text}}</p>
-	{%- endfor %}
+	<p>{{texts[0].text|safe}}</p>
 
 	<table>
 		<tr>
