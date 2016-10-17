@@ -1,4 +1,4 @@
-span.L, span.N, span.C, span.R
+span.L, span.N, span.C, span.R, span.T
 {
 	padding: 1 5px;
 	text-decoration: none;
@@ -30,4 +30,8 @@ span.R
 {
 	/* regular deifned vocab, default label */
 	background-color: #95a5a6;
+}
+span.T
+{
+	background-color: #f39c12;
 }

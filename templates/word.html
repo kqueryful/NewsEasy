@@ -26,22 +26,21 @@
 		{% endif %}
 
 		{% if word.definition %}
-			<h3>{{word.definition|safe}}</h3>
+			<blockquote>{{word.definition|safe}}</blockquote>
 		{% endif %}
 	{%- endfor %}
 
-	<table class="table table-striped table-hover">
-		<tr class="success">
-			<th>Article</th>
-			<th>Gloss</th>
-			<th>Sentence</th>
-		</tr>
-		{%- for sentence in sentences %}
-			<tr>
-				<td><a href="/article/{{sentence.newsid}}/">{{sentence.newsid}}</a></td>
-				<td><a href="http://nihongo.monash.edu/cgi-bin/wwwjdic?9ZIH{{sentence.sentence|striptags|safe}}">Gloss</a></td>
-				<td>{{sentence.sentence|safe}}</td>
-			</tr>
-		{%- endfor %}
-	</table>
+	<div class="list-group">
+		<a href="#" class="list-group-item active">
+  		Example sentences from articles
+  	</a>
+		{% for sentence in sentences %}
+			<a href="/article/{{sentence.newsid}}/" class="list-group-item">
+				<h4 class="list-group-item-heading">{{sentence.title}}</h4>
+				<p class="list-group-item-text text-success">{{sentence.sentence|safe}}</p>
+			</a>
+		{% endfor %}
+	</div>
+
+
 {% endblock %}

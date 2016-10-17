@@ -54,7 +54,7 @@ class SqliteInstance:
 		defs (str): the word definition
 		"""
 
-		#todo:20 fix word frequencies
+		#todo:70 fix word frequencies
 		if category != '':
 			try:
 				self.c.execute("INSERT INTO Words (word, reading, frequency, category) VALUES (?,?,?,?)", (word, reading, 1, category))

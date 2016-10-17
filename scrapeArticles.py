@@ -26,13 +26,14 @@ if __name__ == '__main__':
     for files in glob.glob("news/*.out.json"):
         article = json.load(open(files, encoding="utf-8"))
 
-        #todo: add article parsing class
+        #todo:0 add article parsing class
 
         # article prep
         text = article["text"]
         title = text.split(' ')[0]
         articleText = text[len(title):]
         fancyArticle = articleText
+        wordsSearched = set()
         articleLines = articleText.split(u"。")
 
         # for each word
@@ -60,8 +61,10 @@ if __name__ == '__main__':
                             item["word"], sentence, article["newsid"])
 
                 # article highlighting
-                fancyArticle = formatter.highlight(
-                    item["word"], fancyArticle, item["class"])
+                if item["word"] not in wordsSearched:
+                    fancyArticle = formatter.highlight(
+                        item["word"], fancyArticle, item["class"])
+                    wordsSearched.add(item["word"])
 
             # defined words
             if item.get("dicid") != None and not item.get("dicid").isspace():
@@ -109,11 +112,13 @@ if __name__ == '__main__':
                             item["base"], sentence, article["newsid"])
 
                 # article highlighting
-                fancyArticle = formatter.highlight(item["word"], fancyArticle)
+                if item["word"] not in wordsSearched:
+                    fancyArticle = formatter.highlight(item["word"], fancyArticle)
+                    wordsSearched.add(item["word"])
 
         # save article
-        #todo: save plain article to DB
-        db.add_article(article["newsid"], title, fancyArticle, fancyArticle)
+        #todo:60 save plain article to DB
+        db.add_article(article["newsid"], title, articleText, fancyArticle)
 
     db.commit()
     db.clean_up()

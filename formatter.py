@@ -35,5 +35,5 @@ class Formatter:
         article (str): the complete article
         type (str): mark for proper nouns or default to regular 'R'
         """
-        # todo: better R style CSS
-        return re.sub("[^>](?P<word>" + word + ")[^<]", "<span class='" + type + "'>" + word + "</span>", article)
+        # todo: something's not right with the regex. see k10010458811000
+        return re.sub(word, "<span class='" + type + "'>" + word + "</span>", article)
