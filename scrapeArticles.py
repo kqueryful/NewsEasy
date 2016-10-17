@@ -2,6 +2,7 @@ import re
 import json
 import glob
 from urllib import request
+
 from grabber import Grabber
 from sqliteInstance import SqliteInstance
 from formatter import Formatter
@@ -14,9 +15,9 @@ def download_files():
         grabber.download_article(id)
 
 if __name__ == '__main__':
-    download_files()
 
     # setup
+    download_files()
     db = SqliteInstance()
     db.table_setup()
     formatter = Formatter()
@@ -24,6 +25,8 @@ if __name__ == '__main__':
     # for each article
     for files in glob.glob("news/*.out.json"):
         article = json.load(open(files, encoding="utf-8"))
+
+        #todo: add article parsing class
 
         # article prep
         text = article["text"]
@@ -36,8 +39,8 @@ if __name__ == '__main__':
         for item in article["morph"]:
 
             # proper nouns
-            if item.get("class") in ['L', 'N', 'C'] and item["word"] != u"・":
-                                # get readings
+            if item.get("class") in ['L', 'N', 'C'] and item["word"] not in [u"・", u"　"]:
+                # build readings
                 reading = ""
                 for index, val in enumerate(item["ruby"]):
                     try:
@@ -51,7 +54,8 @@ if __name__ == '__main__':
                 # add examples
                 for line in articleLines:
                     if item["word"] in line:
-                        sentence = formatter.bold_in_sentence(item["word"], line)
+                        sentence = formatter.bold_in_sentence(
+                            item["word"], line)
                         db.add_example(
                             item["word"], sentence, article["newsid"])
 
@@ -72,7 +76,7 @@ if __name__ == '__main__':
                 try:
                     dicFile = json.load(open(dicPath, encoding="utf-8"))
                 except:
-                    print(dicPath)
+                    print("Problems opening " + dicPath)
 
                 ankiDefs = []
                 rubyDefs = []
@@ -107,7 +111,8 @@ if __name__ == '__main__':
                 # article highlighting
                 fancyArticle = formatter.highlight(item["word"], fancyArticle)
 
-                # save article
+        # save article
+        #todo: save plain article to DB
         db.add_article(article["newsid"], title, fancyArticle, fancyArticle)
 
     db.commit()

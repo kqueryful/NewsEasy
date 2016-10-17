@@ -1,5 +1,6 @@
 import sqlite3
 
+# todo: make an interface?
 class SqliteInstance:
 	"""
 	data persistence through SQLite

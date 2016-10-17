@@ -1,4 +1,4 @@
-from flask import Flask, g, render_template, request, url_for
+from flask import Flask, g, render_template, request, url_for, redirect, flash
 import sqlite3
 
 from forms import SearchForm
@@ -25,6 +25,10 @@ def index():
                            ("%" + searchTerm + "%", ))
         words = [dict(word=row[0], reading=row[1], frequency=row[2])
                  for row in cur.fetchall()]
+        if not words:
+            flash('Searched for "{}", but got no results.'.format(searchTerm), 'error')
+        else:
+            flash('Below are the results for "{}".'.format(searchTerm))
 
     if request.method == 'GET':
         cur = g.db.execute(
@@ -71,7 +75,10 @@ def article(name=None):
 
 #todo: add summary page
 #todo: add exports page (options to hide loan words)
-# todo:0 add 404 error page
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
 
 if __name__ == '__main__':
     app.jinja_env.globals['get_resource_as_string'] = get_resource_as_string

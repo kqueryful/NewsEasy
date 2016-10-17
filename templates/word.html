@@ -1,21 +1,28 @@
 {% extends "base.html" %}
 
 {% block content %}
-	<a href="{{ url_for('index') }}">NHK NewsWeb Easy Mining</a>
+
 
 	{%- for word in wordInfo %}
 		<title>{{word.word}}</title>
-		<h1>{{word.word}} - {{word.reading}}
-			{% if word.alt %}【{{word.alt}}】{% endif %}
+		<h1>{{word.word}}
+			{% if (word.reading) and (word.reading != word.word) %}
+				- {{word.reading}}
+			{% endif %}
+			{% if word.alt %}
+				【{{word.alt}}】
+			{% endif %}
 		</h1>
 		{% if word.category %}
+			<h4><a href="https://ja.wikipedia.org/wiki/{{word.word}}">
 			{% if word.category == 'L' %}
-				<h4><a href="https://ja.wikipedia.org/wiki/{{word.word}}">Proper noun: Country, prefecture, town, or place</a></h4>
+				Proper noun: Country, prefecture, town, or place
 			{% elif word.category == 'N' %}
-				<h4><a href="https://ja.wikipedia.org/wiki/{{word.word}}">Proper noun: Personal name</a></h4>
+				Proper noun: Personal name
 			{% elif word.category == 'C' %}
-				<h4><a href="https://ja.wikipedia.org/wiki/{{word.word}}">Proper noun: Company or group</a></h4>
+				Proper noun: Company or group
 			{% endif %}
+			</a></h4>
 		{% endif %}
 
 		{% if word.definition %}
@@ -23,8 +30,8 @@
 		{% endif %}
 	{%- endfor %}
 
-	<table>
-		<tr>
+	<table class="table table-striped table-hover">
+		<tr class="success">
 			<th>Article</th>
 			<th>Gloss</th>
 			<th>Sentence</th>
