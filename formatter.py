@@ -1,37 +1,39 @@
 import re
 
+
 class Formatter:
-  def convert_to_ankiDef(self, rubyDef):
-    """
-    converts a definition into Anki Japanese plugin formatting
 
-    rubyDef (str): a ruby furigana formatted definition
-    """
+    def convert_to_ankiDef(self, rubyDef):
+        """
+        converts a definition into Anki Japanese plugin formatting
 
-    ankiDef = re.sub("</*ruby>", "", rubyDef)
-    ankiDef = re.sub("</rb>", "", ankiDef)
-    ankiDef = re.sub("<rb>", " ", ankiDef)
-    ankiDef = re.sub("<rt>", "[", ankiDef)
-    ankiDef = re.sub("</rt>", "]", ankiDef)
+        rubyDef (str): a ruby furigana formatted definition
+        """
 
-    return ankiDef
+        ankiDef = re.sub("</*ruby>", "", rubyDef)
+        ankiDef = re.sub("</rb>", "", ankiDef)
+        ankiDef = re.sub("<rb>", " ", ankiDef)
+        ankiDef = re.sub("<rt>", "[", ankiDef)
+        ankiDef = re.sub("</rt>", "]", ankiDef)
 
-  def bold_in_sentence(self, word, line):
-    """
-    return a sentence with a given word in bold
+        return ankiDef
 
-    word (str): the word to find
-    line (str): the line to search in
-    """
-    return re.sub(word, "<b>" + word + "</b>", line.strip() + u"。")
+    def bold_in_sentence(self, word, line):
+        """
+        return a sentence with a given word in bold
 
-  def highlight(self, word, article, type='R'):
-    """
-    returns a version of article with special words tagged
+        word (str): the word to find
+        line (str): the line to search in
+        """
+        return re.sub(word, "<b>" + word + "</b>", line.strip() + u"。")
 
-    word (str): the word to find
-    article (str): the complete article
-    type (str): mark for proper nouns or default to regular 'R'
-    """
-    #done:0 make highlighting css
-    return re.sub("[^>](?P<word>"+ word +")[^<]", "<span class='" + type + "'>" + word + "</span>", article)
+    def highlight(self, word, article, type='R'):
+        """
+        returns a version of article with special words tagged
+
+        word (str): the word to find
+        article (str): the complete article
+        type (str): mark for proper nouns or default to regular 'R'
+        """
+        # todo: better R style CSS
+        return re.sub("[^>](?P<word>" + word + ")[^<]", "<span class='" + type + "'>" + word + "</span>", article)
