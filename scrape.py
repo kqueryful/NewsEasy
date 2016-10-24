@@ -7,6 +7,9 @@ from flaskapp import db
 from grabber import Grabber
 
 def download_files():
+    """
+    download all files
+    """
     grabber = Grabber()
 
     for id in grabber.get_grabber('fromSite'):
@@ -14,12 +17,21 @@ def download_files():
 
 # helper functions
 def is_proper_noun(category, word):
+    """
+    return true if word is a proper noun
+    """
     return category in ['L', 'N', 'C'] and word not in [u"・", u"　"]
 
 def is_defined(dicid):
+    """
+    return true if word has a definition
+    """
     return dicid != None and not dicid.isspace()
 
 def build_reading(ruby):
+    """
+    return a word's ruby-formatted reading
+    """
     reading = ""
     for index, val in enumerate(ruby):
         try:
@@ -29,6 +41,9 @@ def build_reading(ruby):
     return reading
 
 def build_definition(dicPath, dicid):
+    """
+    return a word's ruby-formatted definition
+    """
     try:
         dicFile = json.load(open(dicPath, encoding="utf-8"))
     except:
@@ -45,6 +60,7 @@ def scrape_article(path):
     words = {}
     examples = set()
 
+    # for each article file
     for filename in glob.glob(path):
         article = ""
         id = filename[5:-9]
@@ -53,6 +69,7 @@ def scrape_article(path):
 
         article_data = json.load(open(filename, encoding="utf-8"))
 
+        # for every article element
         for item in article_data["morph"]:
             word = item["word"]
             base = item.get("base")
@@ -72,6 +89,8 @@ def scrape_article(path):
 
             if is_proper_noun(category, word) or is_defined(dicid):
                 tagged_word = "<a href='/word/{}'><span class='{}'>{}</span></a>".format(base, category, word)
+
+                # prepare to save to DB
                 if word not in words:
                     w = Word(word=word)
                     w.category = category
@@ -82,6 +101,7 @@ def scrape_article(path):
                 else:
                     words[word].frequency += 1
 
+            # build up article text
             article += tagged_word
 
         # take the first line, minus the last </S>
@@ -98,7 +118,7 @@ def scrape_article(path):
         sentences = re.finditer(sentenceRegex, strippedArticle)
 
         for sentenceMatch in sentences:
-            sentence = sentenceMatch.group() 
+            sentence = sentenceMatch.group()
             regex = r"<a href='/word/(?P<base>[^']+)'><span class='.'>(?P<word>[^<]+)</span></a>"
             matches = re.finditer(regex, sentence)
             sentence = re.sub(regex, "\g<word>", sentence)
@@ -106,6 +126,7 @@ def scrape_article(path):
             for word in matches:
                 wordSentence = re.sub(word.group('word'), "<b>"+ word.group('word') +"</b>", sentence)
 
+                # add example sentence to DB
                 if wordSentence not in examples:
                     examples.add(wordSentence)
                     ex = Example(sentence=wordSentence)
@@ -118,11 +139,11 @@ def scrape_article(path):
 
     db.session.commit()
 
-# testing
 if __name__ == "__main__":
         # setup
         download_files()
         db.drop_all()
         db.create_all()
 
+        # all article scraping
         scrape_article("news/*.out.json")

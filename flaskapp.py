@@ -31,8 +31,10 @@ def index():
             flash('Searched for "{}", but got no results.'.format(searchTerm), 'error')
         else:
             flash('Below are the results for "{}".'.format(searchTerm))
+
     elif request.method == 'POST':
         flash('Nothing typed into searchbar.', 'error')
+
     elif request.method == 'GET':
         words = Word.query.order_by(Word.frequency.desc()).limit(10)
 
@@ -45,8 +47,7 @@ def index():
 def word(id=None):
     form = SearchForm()
     texts = Article.query.filter_by(id=id).first()
-    #todo: gotta figure out why the words aren't distinct
-    examples = Example.query.filter_by(article_id=id).distinct(Example.word_id)
+    examples = Example.query.filter_by(article_id=id).group_by(Example.word_id)
 
     return render_template('article.html', texts=texts, name=id, examples=examples, form=form)
 
