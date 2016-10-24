@@ -30,17 +30,17 @@
 		{% endif %}
 	{%- endfor %}
 
-	<div class="list-group">
-		<a href="#" class="list-group-item active">
-  		Example sentences from articles
-  	</a>
+	<ul class="list-group">
+		<li class="list-group-item active">Example sentences from articles</li>
 		{% for sentence in sentences %}
-			<a href="/article/{{sentence.newsid}}/" class="list-group-item">
-				<h4 class="list-group-item-heading">{{sentence.title}}</h4>
-				<p class="list-group-item-text text-success">{{sentence.sentence|safe}}</p>
-			</a>
+			<li class="list-group-item"
+				<h4 class="list-group-item-heading">{{sentence.article.title|safe}}</h4>
+				<a href="/article/{{sentence.article_id}}/">
+					<p class="list-group-item-text text-success">{{sentence.sentence|safe}}</p>
+				</a>
+			</li>
 		{% endfor %}
-	</div>
+	</ul>
 
 
 {% endblock %}

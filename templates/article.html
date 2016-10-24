@@ -2,17 +2,21 @@
 
 {% block content %}
 
-	<h2>{{texts[0].title}}</h2>
+	<h2>{{texts.title|safe}}</h2>
 
-	<p class="h4">{{texts[0].markup|safe}}</p>
+	<p>{{texts.text|safe}}</p>
 
 	<table class="table table-striped table-hover">
 		<tr class="success">
-			<th>Article Word List</th>
+			<th>Word</th>
+			<th>Defintion</th>
 		</tr>
-		{%- for word in words %}
+		{%- for ex in examples %}
 				<tr>
-					<td><a href="/word/{{word.word}}/">{{word.word}}</a></td>
+					{% if ex.word.definition %}
+						<td><a href="/word/{{ex.word_id}}/">{{ex.word_id}}</a></td>
+						<td>{{ex.word.definition|safe}}</td>
+					{% endif %}
 				</tr>
 		{%- endfor %}
 	</table>
