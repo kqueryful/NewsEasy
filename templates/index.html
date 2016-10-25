@@ -19,7 +19,12 @@
   </article>
 
   {% if titles %}
-    <h2>Articles</h2>
+    <h2>
+      Articles
+      {% if titlesQuery %}
+        <small class="text-muted">Returned {{titlesQuery.count()}} results.</small>
+      {% endif %}
+    </h2>
     <table class="table table-striped table-hover">
       <tr class="default">
         <th>Article</th>
@@ -36,7 +41,12 @@
   {% endif %}
 
   {% if words %}
-    <h2>Words</h2>
+    <h2>
+      Words
+      {% if wordsQuery %}
+        <small class="text-muted">Returned {{wordsQuery.count()}} results.</small>
+      {% endif %}
+    </h2>
     <table class="table table-striped table-hover">
       <tr class="success">
         <th>Word</th>

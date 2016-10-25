@@ -23,11 +23,16 @@ def index():
     words = []
     titles = []
     searchTerm = ""
+    wordsQuery = None
+    titlesQuery = None
 
     if form.validate_on_submit():
         searchTerm = form.searchBox.data
-        words = Word.query.filter(Word.word.like('%' + searchTerm + '%')).order_by(Word.frequency.desc()).all()
-        titles = Article.query.filter(Article.title.like('%' + searchTerm + '%')).all()
+        wordsQuery = Word.query.filter(Word.word.like('%' + searchTerm + '%')).order_by(Word.frequency.desc())
+        words = wordsQuery.all()
+        titlesQuery = Article.query.filter(Article.title.like('%' + searchTerm + '%'))
+        titles = titlesQuery.all()
+
 
         if not ( words or titles):
             flash('Searched for "{}", but got no results.'.format(searchTerm), 'error')
@@ -40,7 +45,7 @@ def index():
     elif request.method == 'GET':
         words = Word.query.order_by(Word.frequency.desc()).limit(10)
 
-    return render_template('index.html', words=words, titles=titles, form=form)
+    return render_template('index.html', words=words, wordsQuery=wordsQuery, titles=titles, titlesQuery=titlesQuery, form=form)
 
 
 # article page
