@@ -21,13 +21,15 @@ def get_resource_as_string(name, charset='utf-8'):
 def index():
     form = SearchForm()
     words = []
+    titles = []
     searchTerm = ""
 
     if form.validate_on_submit():
         searchTerm = form.searchBox.data
         words = Word.query.filter(Word.word.like('%' + searchTerm + '%')).order_by(Word.frequency.desc()).all()
+        titles = Article.query.filter(Article.title.like('%' + searchTerm + '%')).all()
 
-        if not words:
+        if not ( words or titles):
             flash('Searched for "{}", but got no results.'.format(searchTerm), 'error')
         else:
             flash('Below are the results for "{}".'.format(searchTerm))
@@ -38,7 +40,7 @@ def index():
     elif request.method == 'GET':
         words = Word.query.order_by(Word.frequency.desc()).limit(10)
 
-    return render_template('index.html', words=words, form=form)
+    return render_template('index.html', words=words, titles=titles, form=form)
 
 
 # article page
@@ -55,10 +57,10 @@ def word(id=None):
 @app.route('/word/<name>/')
 def article(name=None):
     form = SearchForm()
-    wordInfo = Word.query.filter_by(word=name)
+    word = Word.query.filter_by(word=name).first()
     sentences = Example.query.filter_by(word_id=name).all()
 
-    return render_template('word.html', wordInfo=wordInfo, sentences=sentences, form=form)
+    return render_template('word.html', word=word, sentences=sentences, form=form)
 
 #todo:20 add summary page
 #todo:10 add exports page (options to hide loan words)

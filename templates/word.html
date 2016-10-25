@@ -3,32 +3,33 @@
 {% block content %}
 
 
-	{%- for word in wordInfo %}
-		<title>{{word.word}}</title>
-		<h1>{{word.word}}
-			{% if (word.reading) and (word.reading != word.word) %}
-				- {{word.reading}}
-			{% endif %}
-			{% if word.alt %}
-				【{{word.alt}}】
-			{% endif %}
-		</h1>
-		{% if word.category %}
-			<h4><a href="https://ja.wikipedia.org/wiki/{{word.word}}">
-			{% if word.category == 'L' %}
-				Proper noun: Country, prefecture, town, or place
-			{% elif word.category == 'N' %}
-				Proper noun: Personal name
-			{% elif word.category == 'C' %}
-				Proper noun: Company or group
-			{% endif %}
-			</a></h4>
-		{% endif %}
 
-		{% if word.definition %}
-			<blockquote>{{word.definition|safe}}</blockquote>
+	<title>{{word.word}}</title>
+	<h1>{{word.word}}
+		{% if (word.reading) and (word.reading != word.word) %}
+			- {{word.reading}}
 		{% endif %}
-	{%- endfor %}
+		{% if word.alt %}
+			【{{word.alt}}】
+		{% endif %}
+	</h1>
+	{% if word.category %}
+		<h4><a href="https://ja.wikipedia.org/wiki/{{word.word}}">
+		{% if word.category == 'L' %}
+			Proper noun: Country, prefecture, town, or place
+		{% elif word.category == 'N' %}
+			Proper noun: Personal name
+		{% elif word.category == 'C' %}
+			Proper noun: Company or group
+		{% endif %}
+		</a></h4>
+	{% endif %}
+
+	{% if word.definition %}
+		<h5>Definition</h5>
+		<blockquote>{{word.definition|safe}}</blockquote>
+	{% endif %}
+
 
 	<ul class="list-group">
 		<li class="list-group-item active">Example sentences from articles</li>
@@ -36,7 +37,7 @@
 			<li class="list-group-item"
 				<h4 class="list-group-item-heading">{{sentence.article.title|safe}}</h4>
 				<a href="/article/{{sentence.article_id}}/">
-					<p class="list-group-item-text text-success">{{sentence.sentence|safe}}</p>
+					<p class="list-group-item-text text-primary">{{sentence.sentence|safe}}</p>
 				</a>
 			</li>
 		{% endfor %}

@@ -18,8 +18,8 @@ span.L
 }
 span.N
 {
-	/* proper noun name, success label */
-	background-color: #18bc9c;
+	/* proper noun name, success label 18bc9c*/
+	background-color: #9954bb;
 }
 span.C
 {
@@ -28,7 +28,7 @@ span.C
 }
 span.R
 {
-	/* regular deifned vocab, default label */
+	/* regular defined vocab, default label */
 	background-color: #95a5a6;
 }
 s
@@ -36,4 +36,8 @@ s
 	margin: 0 0 10.5px;
 	text-decoration: none !important;
 	display: block;
+}
+body {
+    padding-top: 60px; /* Whatever the height of your navbar is; the
+                             default is 50px */
 }

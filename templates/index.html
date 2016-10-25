@@ -18,20 +18,41 @@
     {% endwith %}
   </article>
 
-  <table class="table table-striped table-hover">
-    <tr class="success">
-      <th>Word</th>
-      <th>Reading</th>
-      <th>Frequency</th>
-    </tr>
-
-
-    {%- for word in words %}
-      <tr>
-        <td><a href="/word/{{word.word}}/">{{word.word}}</a></td>
-        <td>{{word.reading}}</td>
-        <td>{{word.frequency}}</td>
+  {% if titles %}
+    <h2>Articles</h2>
+    <table class="table table-striped table-hover">
+      <tr class="default">
+        <th>Article</th>
+        <th>Title</th>
       </tr>
-    {%- endfor %}
-  </table>
+
+      {%- for article in titles %}
+        <tr>
+          <td><a href="/article/{{article.id}}/">{{article.id}}</a></td>
+          <td>{{article.title|safe}}</td>
+        </tr>
+      {%- endfor %}
+      </table>
+  {% endif %}
+
+  {% if words %}
+    <h2>Words</h2>
+    <table class="table table-striped table-hover">
+      <tr class="success">
+        <th>Word</th>
+        <th>Reading</th>
+        <th>Frequency</th>
+      </tr>
+
+      {%- for word in words %}
+        <tr>
+          <td><a href="/word/{{word.word}}/">{{word.word}}</a></td>
+          <td>{{word.reading}}</td>
+          <td>{{word.frequency}}</td>
+        </tr>
+      {%- endfor %}
+      </table>
+  {% endif %}
+
+
 {% endblock %}

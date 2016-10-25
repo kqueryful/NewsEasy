@@ -2,14 +2,27 @@
 
 {% block content %}
 
-	<h2>{{texts.title|safe}}</h2>
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<h2>{{texts.title|safe}}</h2>
 
-	<p>{{texts.text|safe}}</p>
+			<div class="well well-sm text-center">
+				<span class='L'>Place name</span>
+				<span class='N'>Personal name</span>
+				<span class='C'>Group name</span>
+				<span class='R'>Defined word</span>
+			</div>
+
+
+			<p>{{texts.text|safe}}</p>
+		</div>
+	</div>
+
 
 	<table class="table table-striped table-hover">
-		<tr class="success">
+		<tr class="active">
 			<th>Word</th>
-			<th>Defintion</th>
+			<th>Definition</th>
 		</tr>
 		{%- for ex in examples %}
 				<tr>

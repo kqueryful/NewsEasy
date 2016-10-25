@@ -91,15 +91,15 @@ def scrape_article(path):
                 tagged_word = "<a href='/word/{}'><span class='{}'>{}</span></a>".format(base, category, word)
 
                 # prepare to save to DB
-                if word not in words:
-                    w = Word(word=word)
+                if base not in words:
+                    w = Word(word=base)
                     w.category = category
                     w.reading = reading
                     w.definition = definition
                     w.frequency = 1
-                    words[word] = w
+                    words[base] = w
                 else:
-                    words[word].frequency += 1
+                    words[base].frequency += 1
 
             # build up article text
             article += tagged_word
