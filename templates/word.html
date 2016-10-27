@@ -13,17 +13,18 @@
 			【{{word.alt}}】
 		{% endif %}
 	</h1>
-	{% if word.category %}
-		<h4><a href="https://ja.wikipedia.org/wiki/{{word.word}}">
-		{% if word.category == 'L' %}
-			Proper noun: Country, prefecture, town, or place
-		{% elif word.category == 'N' %}
-			Proper noun: Personal name
-		{% elif word.category == 'C' %}
-			Proper noun: Company or group
-		{% endif %}
-		</a></h4>
+
+	<h4><a href="https://ja.wikipedia.org/wiki/{{word.word}}">
+	{% if word.category == 'L' %}
+		Proper noun: Country, prefecture, town, or place
+	{% elif word.category == 'N' %}
+		Proper noun: Personal name
+	{% elif word.category == 'C' %}
+		Proper noun: Company or group
 	{% endif %}
+	</a></h4>
+
+	<p class="text-muted">Word appears {{word.frequency}} times.</p>
 
 	{% if word.definition %}
 		<h5>Definition</h5>

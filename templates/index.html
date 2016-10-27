@@ -1,5 +1,16 @@
 {% extends "base.html" %}
 
+{% block jumbotron %}
+  {% if articlesCount %}
+    <div class="jumbotron">
+      <div class="container">
+        <h2>Welcome to NewsEasy Town</h2>
+        <p>Currently tracking {{wordsCount}} words from {{articlesCount}} articles.</p>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
+
 {% block content %}
   <article class="flashes">
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -20,13 +31,13 @@
 
   {% if titles %}
     <h2>
-      Articles
+      Article Titles
       {% if titlesQuery %}
         <small class="text-muted">Returned {{titlesQuery.count()}} results.</small>
       {% endif %}
     </h2>
     <table class="table table-striped table-hover">
-      <tr class="default">
+      <tr class="success">
         <th>Article</th>
         <th>Title</th>
       </tr>

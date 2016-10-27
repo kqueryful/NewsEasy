@@ -25,6 +25,9 @@ def index():
     searchTerm = ""
     wordsQuery = None
     titlesQuery = None
+    wordsCount = None
+    articlesCount = None
+
 
     if form.validate_on_submit():
         searchTerm = form.searchBox.data
@@ -32,7 +35,6 @@ def index():
         words = wordsQuery.all()
         titlesQuery = Article.query.filter(Article.title.like('%' + searchTerm + '%'))
         titles = titlesQuery.all()
-
 
         if not ( words or titles):
             flash('Searched for "{}", but got no results.'.format(searchTerm), 'error')
@@ -43,9 +45,13 @@ def index():
         flash('Nothing typed into searchbar.', 'error')
 
     elif request.method == 'GET':
+        wordsCount = Word.query.count()
+        articlesCount = Article.query.count()
         words = Word.query.order_by(Word.frequency.desc()).limit(10)
 
-    return render_template('index.html', words=words, wordsQuery=wordsQuery, titles=titles, titlesQuery=titlesQuery, form=form)
+    return render_template('index.html', words=words, wordsQuery=wordsQuery,
+    titles=titles, titlesQuery=titlesQuery, wordsCount=wordsCount,
+    articlesCount=articlesCount, form=form)
 
 
 # article page
@@ -59,6 +65,7 @@ def word(id=None):
     return render_template('article.html', texts=texts, name=id, examples=examples, form=form)
 
 # word page
+#todo: display word frequency in _ articles on word page
 @app.route('/word/<name>/')
 def article(name=None):
     form = SearchForm()
