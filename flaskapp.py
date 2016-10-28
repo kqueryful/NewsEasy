@@ -37,9 +37,9 @@ def index():
         titles = titlesQuery.all()
 
         if not ( words or titles):
-            flash('Searched for "{}", but got no results.'.format(searchTerm), 'error')
+            flash(u'Searched for 「{}」, but got no results.'.format(searchTerm), 'error')
         else:
-            flash('Below are the results for "{}".'.format(searchTerm))
+            flash(u'Below are the results for 「{}」.'.format(searchTerm))
 
     elif request.method == 'POST':
         flash('Nothing typed into searchbar.', 'error')

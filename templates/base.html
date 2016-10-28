@@ -21,6 +21,20 @@
           <a class="navbar-brand" href="{{ url_for('index') }}">NewsEasy Town</a>
         </div>
 
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="#">About <span class="sr-only">(current)</span></a></li>
+          <li><a href="#">Explore</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">More <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="#">Exports</a></li>
+              <li><a href="#">Helpful sites</a></li>
+              <li class="divider"></li>
+              <li><a href="#">Questions? Comments? Bugs?</a></li>
+            </ul>
+          </li>
+        </ul>
+
         <div id="navbar" class="navbar-collapse collapse">
           <form action="/index" class="navbar-form navbar-right" role="form" method=post>
             <div class="form-group">
