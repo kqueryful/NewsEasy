@@ -74,6 +74,16 @@ def article(name=None):
 
     return render_template('word.html', word=word, sentences=sentences, form=form)
 
+@app.route('/search/<term>/')
+def search(term=None):
+    form = SearchForm()
+
+    wordsQ = Word.query.filter(Word.word.like('%' + searchTerm + '%')).order_by(Word.frequency.desc())
+    words = wordsQ.all()
+    wordsCount = wordsQ.count()
+
+    return render_template('search.html', words=words, wordsCount=wordsCount)
+
 #todo:20 add summary page
 #todo:10 add exports page (options to hide loan words)
 
